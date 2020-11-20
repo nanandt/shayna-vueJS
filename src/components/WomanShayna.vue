@@ -23,7 +23,9 @@
                     <a href="#"><i class="icon_bag_alt"></i></a>
                   </li>
                   <li class="quick-view">
-                    <router-link to="/product">
+                    <router-link
+                      v-bind:to="'/product/' + itemProduct.product_id"
+                    >
                       + Quick View
                     </router-link>
                   </li>
