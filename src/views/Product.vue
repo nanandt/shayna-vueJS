@@ -56,15 +56,25 @@
                     <h3>{{ productDetails.name }}</h3>
                   </div>
                   <div class="pd-desc">
-                    <p>
-                      {{ productDetails.description }}
-                    </p>
+                    <p v-html="productDetails.description"></p>
                     <h4>{{ productDetails.price }}</h4>
                   </div>
                   <div class="quantity">
-                    <router-link to="/cart" class="primary-btn pd-cart"
-                      >Add To Cart
-                    </router-link>
+                    <!-- <router-link to="/cart" class="primary-btn pd-cart"> -->
+                    <a
+                      @click="
+                        saveKeranjang(
+                          productDetails.product_id,
+                          productDetails.name,
+                          productDetails.price,
+                          productDetails.galleries[0].photo
+                        )
+                      "
+                      href="#"
+                      class="primary-btn pd-cart"
+                      >Add to cart</a
+                    >
+                    <!-- </router-link> -->
                   </div>
                 </div>
               </div>
@@ -100,13 +110,8 @@ export default {
   data() {
     return {
       gambar_default: "",
-      thumbs: [
-        "img/mickey1.jpg",
-        "img/mickey2.jpg",
-        "img/mickey3.jpg",
-        "img/mickey4.jpg",
-      ],
       productDetails: [],
+      keranjangUser: [],
     };
   },
   methods: {
@@ -119,8 +124,26 @@ export default {
       // mengambil data photo pada API dan menaruhnya di gambar_default
       this.gambar_default = data.galleries[0].photo;
     },
+    saveKeranjang(idProduct, nameProduct, priceProduct, photoProduct) {
+      var productStorage = {
+        id: idProduct,
+        name: nameProduct,
+        price: priceProduct,
+        photo: photoProduct,
+      };
+      this.keranjangUser.push(productStorage);
+      const parsed = JSON.stringify(this.keranjangUser);
+      localStorage.setItem("keranjangUser", parsed);
+    },
   },
   mounted() {
+    if (localStorage.getItem("keranjangUser")) {
+      try {
+        this.keranjangUser = JSON.parse(localStorage.getItem("keranjangUser"));
+      } catch (e) {
+        localStorage.removeItem("keranjangUser");
+      }
+    }
     axios
       .get("http://shayna-backend.test/api/products", {
         params: {
