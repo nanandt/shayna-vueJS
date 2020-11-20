@@ -60,21 +60,21 @@
                     <h4>{{ productDetails.price }}</h4>
                   </div>
                   <div class="quantity">
-                    <!-- <router-link to="/cart" class="primary-btn pd-cart"> -->
-                    <a
-                      @click="
-                        saveKeranjang(
-                          productDetails.product_id,
-                          productDetails.name,
-                          productDetails.price,
-                          productDetails.galleries[0].photo
-                        )
-                      "
-                      href="#"
-                      class="primary-btn pd-cart"
-                      >Add to cart</a
-                    >
-                    <!-- </router-link> -->
+                    <router-link to="/cart" class="primary-btn pd-cart">
+                      <a
+                        @click="
+                          saveKeranjang(
+                            productDetails.product_id,
+                            productDetails.name,
+                            productDetails.price,
+                            productDetails.galleries[0].photo
+                          )
+                        "
+                        href="#"
+                        class="primary-btn pd-cart"
+                        >Add to cart</a
+                      >
+                    </router-link>
                   </div>
                 </div>
               </div>
