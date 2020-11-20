@@ -76,6 +76,7 @@
                         id="namaLengkap"
                         aria-describedby="namaHelp"
                         placeholder="Masukan Nama"
+                        v-model="customerInfo.name"
                       />
                     </div>
                     <div class="form-group">
@@ -86,6 +87,7 @@
                         id="emailAddress"
                         aria-describedby="emailHelp"
                         placeholder="Masukan Email"
+                        v-model="customerInfo.email"
                       />
                     </div>
                     <div class="form-group">
@@ -96,6 +98,7 @@
                         id="noHP"
                         aria-describedby="noHPHelp"
                         placeholder="Masukan No. HP"
+                        v-model="customerInfo.number"
                       />
                     </div>
                     <div class="form-group">
@@ -104,6 +107,7 @@
                         class="form-control"
                         id="alamatLengkap"
                         rows="3"
+                        v-model="customerInfo.address"
                       ></textarea>
                     </div>
                   </form>
@@ -138,9 +142,11 @@
                       Nama Penerima <span>Shayna</span>
                     </li>
                   </ul>
-                  <router-link to="/success" class="proceed-btn"
-                    >I ALREADY PAID
-                  </router-link>
+                  <!-- <router-link to="/success" class="proceed-btn"> -->
+                  <a @click="checkout" href="#" class="proceed-btn"
+                    >I ALREADY PAID</a
+                  >
+                  <!-- </router-link> -->
                 </div>
               </div>
             </div>
@@ -153,6 +159,7 @@
 </template>
 <script>
 import HeaderShayna from "@/components/HeaderShayna.vue";
+import axios from "axios";
 
 export default {
   name: "cart",
@@ -162,6 +169,12 @@ export default {
   data() {
     return {
       keranjangUser: [],
+      customerInfo: {
+        name: "",
+        email: "",
+        number: "",
+        address: "",
+      },
     };
   },
   methods: {
@@ -169,6 +182,26 @@ export default {
       this.keranjangUser.splice(index, 1);
       const parsed = JSON.stringify(this.keranjangUser);
       localStorage.setItem("keranjangUser", parsed);
+    },
+    // mengirim data ke backend
+    checkout() {
+      let productIds = this.keranjangUser.map(function(product) {
+        return product.id;
+      });
+      let checkoutData = {
+        name: this.customerInfo.name,
+        email: this.customerInfo.email,
+        number: this.customerInfo.number,
+        address: this.customerInfo.address,
+        transaction_total: this.totalBiaya,
+        transaction_status: "PENDING",
+        transaction_details: productIds,
+      };
+      axios
+        .post("http://shayna-backend.test/api/checkout", checkoutData)
+        .then(() => this.$router.push("success"))
+        // eslint-disable-next-line no-console
+        .catch((err) => console.log(err));
     },
   },
   mounted() {
