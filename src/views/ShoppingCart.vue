@@ -119,10 +119,14 @@
                     <li class="subtotal">
                       ID Transaction <span>#SH12000</span>
                     </li>
-                    <li class="subtotal mt-3">Subtotal <span>$240.00</span></li>
-                    <li class="subtotal mt-3">Pajak <span>10%</span></li>
                     <li class="subtotal mt-3">
-                      Total Biaya <span>$440.00</span>
+                      Subtotal <span>${{ totalHarga }}00</span>
+                    </li>
+                    <li class="subtotal mt-3">
+                      Pajak <span>10% = ${{ ditambahPajak }}</span>
+                    </li>
+                    <li class="subtotal mt-3">
+                      Total Biaya <span>${{ totalBiaya }}00</span>
                     </li>
                     <li class="subtotal mt-3">
                       Bank Transfer <span>Mandiri</span>
@@ -175,6 +179,19 @@ export default {
         localStorage.removeItem("keranjangUser");
       }
     }
+  },
+  computed: {
+    totalHarga() {
+      return this.keranjangUser.reduce(function(items, data) {
+        return items + data.price;
+      }, 0);
+    },
+    ditambahPajak() {
+      return (this.totalHarga * 10) / 100;
+    },
+    totalBiaya() {
+      return this.totalHarga + this.ditambahPajak;
+    },
   },
 };
 </script>
